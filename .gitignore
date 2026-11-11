@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+
+# Secrets: this server needs none; keep the rule anyway
+.env
+.env.*
+
+# Real course data stays outside the repository (docs/design.md, section 10)
+local/
+*.local.yaml
+
+# Logs and OS files
+*.log
+.DS_Store
