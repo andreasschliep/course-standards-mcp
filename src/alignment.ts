@@ -23,11 +23,13 @@ import {
 import { LIMITS } from './config.ts';
 import type { Catalog, CatalogObjective } from './data/catalogs.ts';
 import type { Rubric } from './data/rubric.ts';
+import type { Termbase } from './data/termbase.ts';
 import { DomainError } from './errors.ts';
 import { classify, type Activity } from './extract/activities.ts';
 import { extractPassages, extractPlan } from './extract/markdown.ts';
 import { parseCsv, parseMarkdownTables, rowsToActivities } from './extract/table.ts';
 import type { AlignmentOutput, EvidenceStatus } from './schemas.ts';
+import { germanFormsIn } from './terms.ts';
 import { cueMatches, excerpt, makeCue, tokens, type CueLanguage } from './text.ts';
 
 export type DocumentType = 'facilitation_plan' | 'mapping_document' | 'course_description';
@@ -37,6 +39,8 @@ export type Language = 'en' | 'de' | 'de-CH';
 export interface AlignmentRequest {
   catalog: Catalog;
   rubric: Rubric;
+  /** Maps English terms in objectives to German forms for the keyword search. */
+  termbase?: Termbase | undefined;
   text: string;
   source: string;
   documentType: DocumentType;
@@ -162,26 +166,39 @@ function bloomVerbWords(): Set<string> {
   return verbWords;
 }
 
-/** Keywords for candidate passages: from the catalog, else the content words of the objective. */
+/**
+ * Keywords for candidate passages, as groups: one group per concept, and a group counts
+ * as one hit if any of its forms occurs. Sources: the catalog's keywords for the document
+ * language (one group each), plus for German documents the German forms of term-base
+ * terms in the objective ("Sprint Goal" → "Sprint-Ziel"); without either, the English
+ * content words of the objective.
+ */
+interface Keywords {
+  groups: string[][];
+  language: CueLanguage;
+}
+
 function keywordsFor(
   lo: CatalogObjective,
   language: Language,
-): { words: string[]; language: CueLanguage } {
+  termbase: Termbase | undefined,
+): Keywords {
   const lang: CueLanguage = language === 'en' ? 'en' : 'de';
-  const own = lo.keywords[lang];
-  if (own.length) return { words: own, language: lang };
+  const fromTerms = lang === 'de' && termbase ? germanFormsIn(lo.text, termbase) : [];
+  const groups = [...lo.keywords[lang].map((k) => [k]), ...fromTerms];
+  if (groups.length) return { groups, language: lang };
   const content = tokens(lo.text).filter(
     (t) => t.length >= 4 && !STOPWORDS.has(t) && !bloomVerbWords().has(t),
   );
-  return { words: [...new Set(content)], language: 'en' };
+  return { groups: [...new Set(content)].map((w) => [w]), language: 'en' };
 }
 
-function keywordHits(
-  activity: Activity,
-  keywords: { words: string[]; language: CueLanguage },
-): string[] {
+/** Labels (first form) of the keyword groups that occur in the activity. */
+function keywordHits(activity: Activity, keywords: Keywords): string[] {
   const toks = tokens(activity.text);
-  return keywords.words.filter((w) => cueMatches(makeCue(w, keywords.language), toks));
+  return keywords.groups
+    .filter((group) => group.some((w) => cueMatches(makeCue(w, keywords.language), toks)))
+    .map((group) => group[0] ?? '');
 }
 
 // ------------------------------------------------------------------------- assessment
@@ -319,8 +336,8 @@ export function checkAlignment(req: AlignmentRequest): AlignmentOutput {
     let status: EvidenceStatus = row.status;
     let candidates: Array<{ activity: Activity; hits: string[] }> = [];
     if (documentType === 'course_description' || row.status === 'missing') {
-      const keywords = keywordsFor(lo, req.language);
-      const need = Math.min(2, keywords.words.length);
+      const keywords = keywordsFor(lo, req.language, req.termbase);
+      const need = Math.min(2, keywords.groups.length);
       candidates = real
         .filter((a) => !a.objectiveIds.includes(lo.id))
         .map((activity) => ({ activity, hits: keywordHits(activity, keywords) }))

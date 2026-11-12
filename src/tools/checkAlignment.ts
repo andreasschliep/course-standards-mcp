@@ -33,6 +33,7 @@ export function runCheckAlignment(args: AlignmentArgs, deps: ServerDeps): CallTo
   const result = checkAlignment({
     catalog,
     rubric: deps.rubric(),
+    termbase: deps.termbase(),
     text: doc.text,
     source: doc.source,
     documentType: args.document_type,
