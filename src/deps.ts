@@ -6,11 +6,13 @@
 import { loadConfig, type Config } from './config.ts';
 import { loadCatalogs, type CatalogIndex } from './data/catalogs.ts';
 import { loadRubric, type Rubric } from './data/rubric.ts';
+import { loadTermbase, type Termbase } from './data/termbase.ts';
 
 export interface ServerDeps {
   config: Config;
   catalogs(): CatalogIndex;
   rubric(): Rubric;
+  termbase(): Termbase;
 }
 
 export function defaultDeps(config: Config = loadConfig()): ServerDeps {
@@ -18,5 +20,6 @@ export function defaultDeps(config: Config = loadConfig()): ServerDeps {
     config,
     catalogs: () => loadCatalogs(config.courseDirs),
     rubric: () => loadRubric(config.rubricFile),
+    termbase: () => loadTermbase(config.termbaseFile),
   };
 }

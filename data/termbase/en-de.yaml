@@ -1,0 +1,341 @@
+# Term base English → German for Scrum course material.
+#
+# LICENCE OF THIS FILE: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
+# The term pairs are taken from the Scrum Guide 2020 by Ken Schwaber and Jeff Sutherland
+# and from its official German translation, including the translators' glossary
+# ("Übersetzungs-Glossar", version 3.5, 15 June 2022), all published on scrumguides.org
+# under CC BY-SA 4.0. The rest of this repository is MIT licensed.
+#
+# Checked on 12 November 2026 against the three German versions on scrumguides.org:
+#   standard  inclusive forms with a colon ("die Developer:innen")  ← default (de)
+#   female    female forms ("die Developerinnen")                   ← accepted variants
+#   male      male forms ("die Developer")                          ← accepted variants
+#
+# Rules of the translation (from its glossary): fixed Core Scrum terms (accountabilities,
+# artefacts, events) stay English; a German word after English ones is hyphenated
+# ("Product-Backlog-Eintrag"); German grammar applies to English terms.
+#
+# Fields per term:
+#   en, de          the English term and the official German form (standard version)
+#   de_variants     forms from the female and male versions, accepted without a finding
+#   keep_english    true when German texts keep the English term
+#   deprecated      older forms, checked in every text (they also appear in German texts)
+#   wrong_de        wrong or unofficial forms, checked in German texts only
+#   wrong_en        unofficial English forms, checked in every text
+#   severity        severity of the wrong forms of this term (default warn)
+#   allow_in        phrases in which a flagged form is correct (names, quotations)
+#   source, note
+
+version: '1.0'
+languages: { source: en, target: de }
+license: CC BY-SA 4.0
+
+sources:
+  sg2020:
+    title: The Scrum Guide (November 2020), Ken Schwaber & Jeff Sutherland
+    url: https://scrumguides.org/scrum-guide.html
+    license: CC BY-SA 4.0
+  sg2020-de:
+    title: Der Scrum Guide (November 2020), German translation, standard version with the translators' glossary 3.5
+    url: https://www.scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-German.pdf
+    license: CC BY-SA 4.0
+  sg2020-de-female:
+    title: Der Scrum Guide (November 2020), German translation with female forms
+    url: https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-German-weiblich-female-version.pdf
+    license: CC BY-SA 4.0
+  sg2020-de-male:
+    title: Der Scrum Guide (November 2020), German translation with male forms
+    url: https://www.scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-German-männlich-male-version.pdf
+    license: CC BY-SA 4.0
+
+terms:
+  # ------------------------------------------------------------- team and accountabilities
+  - id: scrum-team
+    en: Scrum Team
+    de: Scrum Team
+    keep_english: true
+    wrong_de: [Scrum-Team, Scrumteam]
+    severity: info
+    source: sg2020-de
+    note: The translation writes "Scrum Team" without a hyphen; plural "Scrum Teams".
+
+  - id: product-owner
+    en: Product Owner
+    de: Product Owner:in
+    de_variants: [Product Owner, Product Owner:innen, Product Ownerin, Product Ownerinnen]
+    keep_english: true
+    wrong_de: [Produktverantwortliche, Produktverantwortlicher, Produkteigner, Produktbesitzer]
+    source: sg2020-de
+    note: An accountability; the name stays English ("der:die Product Owner:in").
+
+  - id: scrum-master
+    en: Scrum Master
+    de: Scrum Master:in
+    de_variants: [Scrum Master, Scrum Master:innen, Scrum Masterin, Scrum Masterinnen]
+    keep_english: true
+    wrong_de: [Scrum-Meister]
+    source: sg2020-de
+    note: An accountability; the name stays English ("der:die Scrum Master:in").
+
+  - id: developers
+    en: Developers
+    de: Developer:innen
+    de_variants: [Developer:in, Developerin, Developerinnen, Developer, Developern]
+    keep_english: true
+    deprecated: [Development Team, Development-Team, Entwicklungsteam]
+    wrong_de:
+      - Entwicklerteam
+      - { form: Developers, severity: info }
+    source: sg2020-de
+    note: The 2020 guide replaced the Development Team with Developers inside one Scrum Team. German texts use German grammar ("die Developer:innen", not "die Developers").
+
+  - id: stakeholders
+    en: Stakeholders
+    de: Stakeholder:innen
+    de_variants: [Stakeholder, Stakeholdern, Stakeholderin, Stakeholderinnen]
+    keep_english: true
+    source: sg2020-de
+
+  - id: accountable
+    en: accountable
+    de: ergebnisverantwortlich
+    keep_english: false
+    source: sg2020-de
+
+  - id: responsible
+    en: responsible
+    de: umsetzungsverantwortlich
+    keep_english: false
+    source: sg2020-de
+
+  - id: self-managing
+    en: self-managing
+    de: selbstmanagend
+    keep_english: false
+    deprecated:
+      [
+        self-organizing,
+        self-organising,
+        self-organized,
+        self-organised,
+        selbstorganisierend,
+        selbstorganisiert,
+        Selbstorganisation,
+      ]
+    source: sg2020-de
+    note: The 2020 guide speaks of self-managing Scrum Teams ("Selbstmanagement statt Selbstorganisation"); earlier guides called Development Teams self-organising.
+
+  - id: self-management
+    en: self-management
+    de: Selbstmanagement
+    keep_english: false
+    source: sg2020-de
+
+  - id: cross-functional
+    en: cross-functional
+    de: interdisziplinär
+    keep_english: false
+    wrong_de: [cross-funktional, crossfunktional, funktionsübergreifend]
+    severity: info
+    source: sg2020-de
+
+  # --------------------------------------------------------------------------- artefacts
+  - id: product-backlog
+    en: Product Backlog
+    de: Product Backlog
+    keep_english: true
+    wrong_de: [Produkt-Backlog, Produktbacklog, Produkt Backlog]
+    source: sg2020-de
+    note: An artefact; "das Product Backlog".
+
+  - id: product-backlog-item
+    en: Product Backlog item
+    de: Product-Backlog-Eintrag
+    keep_english: false
+    wrong_de: [Product Backlog Item, Product-Backlog-Item]
+    severity: info
+    source: sg2020-de
+
+  - id: product-backlog-refinement
+    en: Product Backlog refinement
+    de: das Refinement des Product Backlogs
+    keep_english: false
+    deprecated: [Backlog Grooming, Product Backlog Grooming, Grooming]
+    source: sg2020-de
+    note: '"Grooming" was replaced by "refinement" in the 2013 guide.'
+
+  - id: sprint-backlog
+    en: Sprint Backlog
+    de: Sprint Backlog
+    keep_english: true
+    source: sg2020-de
+
+  - id: sprint-backlog-item
+    en: Sprint Backlog item
+    de: Sprint-Backlog-Eintrag
+    keep_english: false
+    source: sg2020-de
+
+  - id: increment
+    en: Increment
+    de: Increment
+    keep_english: true
+    wrong_de: [Inkrement, Inkremente, Produktinkrement, Produkt-Inkrement]
+    source: sg2020-de
+    note: An artefact; "das Increment". The translation never writes "Inkrement".
+
+  - id: product-goal
+    en: Product Goal
+    de: Produkt-Ziel
+    keep_english: false
+    wrong_de: [Produktziel, Produkt Ziel]
+    severity: info
+    source: sg2020-de
+
+  - id: sprint-goal
+    en: Sprint Goal
+    de: Sprint-Ziel
+    keep_english: false
+    wrong_de: [Sprintziel, Sprint Ziel]
+    severity: info
+    source: sg2020-de
+
+  - id: definition-of-done
+    en: Definition of Done
+    de: Definition of Done
+    keep_english: true
+    wrong_de: [Definition von Fertig, Fertig-Definition]
+    source: sg2020-de
+
+  - id: scrum-artifacts
+    en: Scrum Artifacts
+    de: Scrum-Artefakte
+    keep_english: false
+    source: sg2020-de
+
+  # ------------------------------------------------------------------------------ events
+  - id: sprint
+    en: Sprint
+    de: Sprint
+    keep_english: true
+    source: sg2020-de
+
+  - id: sprint-planning
+    en: Sprint Planning
+    de: Sprint Planning
+    keep_english: true
+    wrong_de: [Sprint-Planung, Sprintplanung, Sprint Planung]
+    source: sg2020-de
+    note: An event; "das Sprint Planning".
+
+  - id: daily-scrum
+    en: Daily Scrum
+    de: Daily Scrum
+    keep_english: true
+    wrong_de: [Tägliches Scrum]
+    wrong_en: [Daily Standup, Daily Stand-up, Standup-Meeting, Stand-up-Meeting]
+    source: sg2020-de
+    note: The event is called Daily Scrum; "stand-up" is not a Scrum Guide term.
+
+  - id: sprint-review
+    en: Sprint Review
+    de: Sprint Review
+    keep_english: true
+    wrong_de: [Sprint-Überprüfung]
+    source: sg2020-de
+    note: An event; "das Sprint Review".
+
+  - id: sprint-retrospective
+    en: Sprint Retrospective
+    de: Sprint Retrospective
+    keep_english: true
+    wrong_de: [Sprint Retrospektive, Sprint-Retrospektive, Sprintretrospektive]
+    source: sg2020-de
+    note: An event; "die Sprint Retrospective". The translation keeps it English.
+
+  - id: scrum-events
+    en: Scrum Events
+    de: Scrum Events
+    keep_english: true
+    source: sg2020-de
+
+  - id: timebox
+    en: timebox
+    de: Timebox
+    keep_english: true
+    wrong_de: [Zeitbox]
+    severity: info
+    source: sg2020-de
+
+  # ------------------------------------------------------------------- theory and values
+  - id: empiricism
+    en: empiricism
+    de: Empirie
+    keep_english: false
+    wrong_de: [Empirismus]
+    severity: info
+    source: sg2020-de
+
+  - id: transparency
+    en: Transparency
+    de: Transparenz
+    keep_english: false
+    source: sg2020-de
+
+  - id: inspection
+    en: inspection
+    de: Überprüfung
+    keep_english: false
+    wrong_de: [Inspektion]
+    severity: info
+    source: sg2020-de
+
+  - id: adaptation
+    en: adaptation
+    de: Anpassung
+    keep_english: false
+    wrong_de: [Adaption, Adaptation]
+    severity: info
+    source: sg2020-de
+
+  - id: commitment
+    en: Commitment
+    de: Commitment
+    keep_english: true
+    source: sg2020-de
+
+  - id: focus
+    en: Focus
+    de: Fokus
+    keep_english: false
+    source: sg2020-de
+
+  - id: openness
+    en: Openness
+    de: Offenheit
+    keep_english: false
+    source: sg2020-de
+
+  - id: respect
+    en: Respect
+    de: Respekt
+    keep_english: false
+    source: sg2020-de
+
+  - id: courage
+    en: Courage
+    de: Mut
+    keep_english: false
+    source: sg2020-de
+
+  - id: framework
+    en: framework
+    de: Rahmenwerk
+    keep_english: false
+    source: sg2020-de
+
+  - id: forecast
+    en: forecast
+    de: Vorhersage
+    keep_english: false
+    source: sg2020-de

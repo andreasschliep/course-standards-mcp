@@ -38,7 +38,7 @@ Kurzinput zur Vorlage für Aufgabenbeschreibungen. Übung in Paaren: Jedes Paar 
 
 **Phase:** C2 · **Lernziele:** LO 3
 
-Kurzinput (3 Min.): die Checkliste mit fünf Punkten. Übung in Paaren (7 Min.): Die Paare wenden die Checkliste auf die vorgeschlagene Änderung in ihrem Repository an und entscheiden: mergen oder an den Agenten zurückgeben. Die Developers im Raum geben einander Feedback zur Entscheidung.
+Kurzinput (3 Min.): die Checkliste mit fünf Punkten. Übung in Paaren (7 Min.): Die Paare wenden die Checkliste auf die vorgeschlagene Änderung in ihrem Repository an und entscheiden: mergen oder an den Agenten zurückgeben. Die Developer:innen im Raum geben einander Feedback zur Entscheidung.
 
 ### Pause (5 Min.)
 

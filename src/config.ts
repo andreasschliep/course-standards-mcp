@@ -4,6 +4,7 @@
  * COURSE_STANDARDS_COURSES  catalog folders, separated by ":"; a later folder overrides
  *                           a course id from an earlier one
  * COURSE_STANDARDS_DOCS     allowed roots for document.path, separated by ":"
+ * COURSE_STANDARDS_TERMBASE the term base file (default: data/termbase/en-de.yaml)
  *
  * Defaults point at the fictional data in this repository, so the server works out of
  * the box and never touches real course data unless someone configures it.
@@ -14,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 export interface Config {
   courseDirs: string[];
   docRoots: string[];
+  termbaseFile: string;
   rubricFile: string;
 }
 
@@ -32,6 +34,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   return {
     courseDirs: listFromEnv(env.COURSE_STANDARDS_COURSES, [repoPath('data/courses')]),
     docRoots: listFromEnv(env.COURSE_STANDARDS_DOCS, [repoPath('examples')]),
+    termbaseFile: env.COURSE_STANDARDS_TERMBASE?.trim() || repoPath('data/termbase/en-de.yaml'),
     // The rubric is the server's method and is versioned with the code: not configurable.
     rubricFile: repoPath('data/rubric/bloom.yaml'),
   };

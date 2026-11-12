@@ -179,3 +179,73 @@ export const alignmentOutput = z.object({
 
 export type AlignmentOutput = z.infer<typeof alignmentOutput>;
 export type EvidenceStatus = z.infer<typeof evidenceStatus>;
+
+// --------------------------------------------------------------------------- check_terms
+
+export const termCategory = z.enum(['deprecated', 'keep_english', 'wrong_translation', 'locale']);
+
+export const termsInput = z.object({
+  document: documentInput,
+  language: z
+    .enum(['en', 'de', 'de-CH'])
+    .describe('Language of the text. de-CH adds the Swiss rule: no ß.'),
+  categories: z
+    .array(termCategory)
+    .optional()
+    .describe('Only these finding categories (default: all).'),
+});
+
+export const termsOutput = z.object({
+  language: z.string(),
+  source: z.string(),
+  termbase: z.object({ version: z.string(), license: z.string(), terms: z.number() }),
+  summary: z.object({
+    findings: z.number(),
+    deprecated: z.number(),
+    keep_english: z.number(),
+    wrong_translation: z.number(),
+    locale: z.number(),
+  }),
+  findings: z.array(
+    z.object({
+      category: termCategory,
+      severity: z.enum(['error', 'warn', 'info']),
+      found: z.string(),
+      line: z.number(),
+      column: z.number(),
+      excerpt: z.string(),
+      suggestion: z.string(),
+      term_id: z.string().optional(),
+      source: z.string().optional(),
+      note: z.string().optional(),
+    }),
+  ),
+});
+
+export type TermsOutput = z.infer<typeof termsOutput>;
+
+// --------------------------------------------------------------------------- lookup_term
+
+export const lookupInput = z.object({
+  term: z.string().min(1).max(100).describe('An English or German term, or a form to check.'),
+});
+
+export const lookupOutput = z.object({
+  found: z.boolean(),
+  entries: z.array(
+    z.object({
+      id: z.string(),
+      en: z.string(),
+      de: z.string(),
+      de_variants: z.array(z.string()),
+      keep_english: z.boolean(),
+      deprecated_forms: z.array(z.string()),
+      wrong_translations: z.array(z.string()),
+      matched_as: z.enum(['en', 'de', 'variant', 'deprecated', 'wrong']),
+      source: z.string(),
+      source_title: z.string(),
+      note: z.string().optional(),
+    }),
+  ),
+  suggestions: z.array(z.string()),
+});

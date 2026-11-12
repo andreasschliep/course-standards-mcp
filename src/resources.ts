@@ -3,6 +3,7 @@
  *
  * course://{course_id}/learning-objectives  the normalized catalog of one course
  * rubric://bloom                             levels, criteria, activity types, verdicts
+ * termbase://en-de                           the term base (data licence CC BY-SA 4.0)
  *
  * Resources have no isError channel: an unknown course is a JSON-RPC error
  * (ResourceNotFoundError, -32602 since 2026-07-28).
@@ -81,5 +82,29 @@ export function registerResources(server: McpServer, deps: ServerDeps): void {
     (uri) => ({
       contents: [{ uri: uri.href, mimeType: 'text/markdown', text: renderRubric(deps.rubric()) }],
     }),
+  );
+
+  // One language pair in version 1, so a fixed URI. With a second pair this becomes the
+  // template termbase://{source}-{target} from the design.
+  server.registerResource(
+    'termbase-en-de',
+    'termbase://en-de',
+    {
+      title: 'Term base English → German',
+      description:
+        'Scrum terms with the official German form (Scrum Guide 2020, German translation), accepted ' +
+        'variants, deprecated and wrong forms, and sources. Licence of the data: CC BY-SA 4.0.',
+      mimeType: 'application/json',
+    },
+    (uri) => {
+      // Everything except the local file path.
+      const { version, languages, license, sources, terms } = deps.termbase();
+      const termbase = { version, languages, license, sources, terms };
+      return {
+        contents: [
+          { uri: uri.href, mimeType: 'application/json', text: JSON.stringify(termbase, null, 2) },
+        ],
+      };
+    },
   );
 }
