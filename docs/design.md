@@ -567,7 +567,7 @@ The output names the heuristics it applied in `limits`.
 
 **D4 Tool cut.** Decision: four tools; one `check_alignment` for all three document types; lint as an option of `list_learning_objectives`; no `list_courses` (omit `course_id` instead). Alternative: one tool per document type, plus separate lint and course-list tools. Reason: one result shape for all document types is easier to judge and to explain; fewer tools means fewer wrong tool choices by the model.
 
-**D5 Reuse, not rewrite.** Decision: `learning-objective-lint` as a dependency, pinned to a git commit (during development `file:../learning-objective-lint`). Alternative: copy or rewrite the checker. Reason: one source of truth for parsing, lint and coverage; its 62 tests keep counting; the server only adds extraction and MCP.
+**D5 Reuse, not rewrite.** Decision: `learning-objective-lint` as a dependency, pinned to a commit: a git submodule in `vendor/`, linked by npm as `file:vendor/learning-objective-lint`. Alternative: copy or rewrite the checker; or a git or tarball dependency in `package.json`. Reason: one source of truth for parsing, lint and coverage; its tests keep counting; the server only adds extraction and MCP. npm 12 refuses git and remote-tarball dependencies by default, and the library is not published to the npm registry, so git pins the commit instead of npm.
 
 **D6 Data format.** Decision: versioned YAML files with `source` fields, in configurable folders. Alternative: CSV (spreadsheet-friendly), JSON, SQLite. Reason: the catalogs already exist in this YAML format; comments can mark fictional data; changes are reviewable as diffs. A CSV import for term bases could follow if other trainers maintain them in a spreadsheet.
 

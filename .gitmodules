@@ -1,0 +1,3 @@
+[submodule "vendor/learning-objective-lint"]
+	path = vendor/learning-objective-lint
+	url = https://github.com/andreasschliep/learning-objective-lint.git

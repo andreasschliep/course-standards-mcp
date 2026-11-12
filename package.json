@@ -32,7 +32,7 @@
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",
     "js-yaml": "^4.3.2",
-    "learning-objective-lint": "file:../learning-objective-lint",
+    "learning-objective-lint": "file:vendor/learning-objective-lint",
     "zod": "^4.6.7"
   },
   "devDependencies": {

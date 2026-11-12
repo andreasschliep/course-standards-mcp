@@ -48,12 +48,14 @@ The server says what it could not decide: evidence found only by keywords has `c
 Requires Node.js 22.18 or later.
 
 ```bash
-git clone <this repository>
+git clone --recurse-submodules <this repository>
 cd course-standards-mcp
 npm install
 npm run build
 npm test
 ```
+
+[learning-objective-lint](https://github.com/andreasschliep/learning-objective-lint) is a git submodule in `vendor/`, pinned to one commit, and npm links it from there. If you cloned without `--recurse-submodules`, run `git submodule update --init` before `npm install`.
 
 Try it without a client, with the MCP Inspector:
 
