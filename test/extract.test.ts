@@ -56,6 +56,16 @@ test('references: unknown numbers are reported, numbers without a prefix are ign
   });
 });
 
+test('references: a note in brackets does not end the list', () => {
+  const r = findReferences(
+    'LO 3.1–3.3 [siehe Hinweis 3], 6.4 (optional), 1.4',
+    DEFAULT_REFERENCES,
+    DOTTED,
+  );
+  assert.deepEqual(r.ids, ['3.1', '3.2', '3.3', '6.4', '1.4']);
+  assert.deepEqual(r.unknown, [], 'the 3 inside the note is not a reference');
+});
+
 test('references: a table cell may hold a bare list', () => {
   assert.deepEqual(resolveCell('2, 3', ADB_REFS, ADB_IDS).ids, ['ADB-2', 'ADB-3']);
   assert.deepEqual(resolveCell('Lernziel 5', ADB_REFS, ADB_IDS).ids, ['ADB-5']);

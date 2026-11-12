@@ -20,7 +20,10 @@ export interface References {
 const NUM = String.raw`\d+(?:\.\d+)*`;
 const RANGE_SEP = String.raw`\s*(?:[-‐‑–—]|bis|to)\s*`;
 const ITEM = `${NUM}(?:${RANGE_SEP}${NUM})?`;
-const LIST_SEP = String.raw`\s*(?:,|;|/|&|\bund\b|\band\b)\s*`;
+// A note in brackets or parentheses after an item does not end the list:
+// "LO 1.5–1.7 [see note 3], 2.4–2.8" still reads 2.4–2.8.
+const NOTE = String.raw`(?:\s*(?:\[[^\]\n]{0,200}\]|\([^)\n]{0,200}\)))?`;
+const LIST_SEP = String.raw`${NOTE}\s*(?:,|;|/|&|\bund\b|\band\b)\s*`;
 const LIST = `${ITEM}(?:${LIST_SEP}${ITEM})*`;
 const MAX_RANGE = 50;
 
@@ -50,7 +53,9 @@ function expandItem(item: string, config: ReferenceConfig, known: Set<string>): 
 
 function expandList(list: string, config: ReferenceConfig, known: Set<string>): References {
   const out: References = { ids: [], unknown: [] };
-  for (const item of list.match(new RegExp(ITEM, 'g')) ?? []) {
+  // Notes are skipped: a number inside "[see note 3]" is not a reference.
+  const items = list.replace(/\[[^\]]*\]|\([^)]*\)/g, ' ');
+  for (const item of items.match(new RegExp(ITEM, 'g')) ?? []) {
     const r = expandItem(item, config, known);
     out.ids.push(...r.ids);
     out.unknown.push(...r.unknown);
