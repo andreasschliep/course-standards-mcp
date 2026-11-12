@@ -1,0 +1,187 @@
+# Bloom rubric for course-standards-mcp.
+#
+# One file, two readers:
+# - the server uses activity_types to infer the highest Bloom level a block of a
+#   document plausibly reaches (its "ceiling"), and copies criteria and questions
+#   into each objective's needs_judgment;
+# - the model reads the same content as the resource rubric://bloom and judges.
+# So what the server computes and what the model reads cannot drift apart.
+#
+# Levels: Bloom's revised taxonomy (Anderson & Krathwohl, 2001). Verb and cue lists
+# are written for this project; extend them here, not in code.
+
+version: '1.0'
+
+levels:
+  - id: Remember
+    description: Participants retrieve facts, terms or lists from memory.
+    verbs:
+      en: [recall, list, name, define, identify, recognise, state]
+      de: [aufzählen, benennen, nennen, definieren, wiedergeben, erkennen]
+    met_evidence: Participants retrieve the items themselves (quiz, recall round, matching), not only hear them.
+    weak_signs: The items are only shown on a slide or mentioned by the trainer.
+    criteria:
+      - Participants retrieve the items themselves
+      - and find out whether they were right.
+
+  - id: Understand
+    description: Participants explain an idea in their own words or with their own example.
+    verbs:
+      en: [explain, describe, summarise, classify, interpret, illustrate, outline]
+      de: [erklären, beschreiben, zusammenfassen, erläutern, einordnen, veranschaulichen]
+    met_evidence: Participants explain, paraphrase or give their own example, and someone checks it.
+    weak_signs: Only the trainer explains; participants listen.
+    criteria:
+      - Participants put the idea into their own words or their own example
+      - and someone checks the explanation.
+
+  - id: Apply
+    description: Participants carry out a procedure or use a tool in a realistic situation.
+    verbs:
+      en: [apply, use, demonstrate, implement, execute, perform, conduct, facilitate]
+      de: [anwenden, durchführen, einsetzen, umsetzen, nutzen, moderieren, üben]
+    met_evidence: Participants perform the behaviour named by the verb themselves, in a context close to the objective, and get feedback.
+    weak_signs: Participants watch a demo or hear about the procedure; the exercise practises something else; there is no time to do it.
+    criteria:
+      - Participants perform the behaviour named by the verb themselves
+      - in a context close to the objective
+      - and get feedback on it.
+
+  - id: Analyse
+    description: Participants break material into parts, compare or distinguish, and find relationships.
+    verbs:
+      en: [analyse, analyze, compare, differentiate, distinguish, examine, categorise]
+      de: [analysieren, vergleichen, unterscheiden, untersuchen, zuordnen, gegenüberstellen]
+    met_evidence: Participants work on given material (cases, data, examples) and work out the distinction or relationship themselves.
+    weak_signs: The distinction is presented as a finished table; participants only agree with it.
+    criteria:
+      - Participants work on material they have not seen solved
+      - and work out the distinction or relationship themselves.
+
+  - id: Evaluate
+    description: Participants judge something against criteria and justify the judgment.
+    verbs:
+      en: [evaluate, assess, judge, critique, justify, prioritise, recommend]
+      de: [bewerten, beurteilen, einschätzen, begründen, priorisieren, prüfen]
+    met_evidence: Participants reach their own judgment against stated criteria and justify it to others.
+    weak_signs: Criteria are presented but never applied; the trainer gives the verdict.
+    criteria:
+      - Participants reach their own judgment against stated criteria
+      - and justify it to others.
+
+  - id: Create
+    description: Participants produce something new (plan, design, artefact) from the parts they learned.
+    verbs:
+      en: [create, design, develop, formulate, construct, plan, compose, build]
+      de: [entwerfen, gestalten, entwickeln, erstellen, formulieren, konzipieren, planen]
+    met_evidence: Participants produce a new artefact that fits the objective, and the artefact is reviewed.
+    weak_signs: Participants fill in a template with given answers; or they only discuss what an artefact could contain.
+    criteria:
+      - Participants produce a new artefact themselves
+      - that fits the objective
+      - and the artefact gets reviewed.
+
+# Activity types. A cue matches a word of the document after lower-casing and
+# folding umlauts (ä→ae, ö→oe, ü→ue, ß→ss). German cues match a whole word, a
+# word that starts with the cue (Übungen) or ends with it (Partnerübung).
+# English cues match a whole word or a word that starts with the cue.
+# ceiling: the highest Bloom level this type of activity plausibly reaches.
+# passive: participants mostly receive (relevant for the passive_only finding).
+activity_types:
+  - id: break
+    ceiling: null
+    ignore: true
+    cues:
+      de: [Pause, Mittagspause, Puffer]
+      en: [break, lunch]
+
+  - id: quiz
+    ceiling: Remember
+    passive: false
+    cues:
+      de: [Quiz, Wissensabfrage, Abfrage]
+      en: [quiz, knowledge check]
+
+  - id: lecture
+    ceiling: Understand
+    passive: true
+    cues:
+      de: [Vortrag, Vorträge, Input, Kurzinput, Impuls, Erklärung]
+      en: [lecture, input, talk, explanation]
+
+  - id: demo
+    ceiling: Understand
+    passive: true
+    cues:
+      de: [Demo, Vorführung, vorführen]
+      en: [demo, demonstration, walkthrough]
+
+  - id: story
+    ceiling: Understand
+    passive: true
+    cues:
+      de: [Geschichte, Erzählung]
+      en: [story, anecdote]
+
+  - id: discussion
+    ceiling: Understand
+    passive: true
+    cues:
+      de: [Diskussion, Austausch, Plenum, Murmelgruppe, Partnergespräch, Blitzlicht]
+      en: [discussion, plenary, buzz group, check-in]
+
+  - id: exercise
+    ceiling: Apply
+    passive: false
+    cues:
+      de: [Übung, ausprobieren, Hands-on, anwenden, wenden]
+      en: [exercise, practice, practise, hands-on, try out]
+
+  - id: simulation
+    ceiling: Apply
+    passive: false
+    cues:
+      de: [Rollenspiel, Simulation, Fishbowl]
+      en: [role play, roleplay, simulation, fishbowl]
+
+  - id: case_analysis
+    ceiling: Analyse
+    passive: false
+    cues:
+      de: [Fallstudie, Fallanalyse, Ursachenanalyse, vergleichen, ordnen]
+      en: [case study, root cause, compare, sort]
+
+  - id: critique
+    ceiling: Evaluate
+    passive: false
+    cues:
+      de: [Peer-Review, begutachten, bewerten, beurteilen]
+      en: [peer review, critique, assess, evaluate]
+
+  - id: design
+    ceiling: Create
+    passive: false
+    cues:
+      de: [entwerfen, entwerf, entwirft, Entwurf, gestalten, erstellen, konzipieren]
+      en: [design, build, draft, create]
+
+  - id: ambiguous
+    ceiling: null
+    passive: false
+    cues:
+      de: [Reflexion, Präsentation, präsentieren, Debriefing]
+      en: [reflection, debrief, present, presentation]
+
+verdicts:
+  met: In at least one activity, participants perform the objective's behaviour at or above the target level, and there is a cited location.
+  weak: The content is right, but the activity stays below the target level, there is too little time, or only part of the behaviour is practised.
+  missed: No activity addresses the objective, or the evidence is unrelated.
+
+# Questions for needs_judgment, by evidence status. Placeholders: {id} {level} {text}
+# {activities} (titles of the evidence activities), {behaviour} (the objective text).
+questions:
+  covered: 'Do participants in {activities} actually reach {level} for {id} ("{text}"), as described?'
+  partial: 'The evidence for {id} ({level}) stays below the target level: {activities}. Do participants perform "{text}" themselves anywhere in the document?'
+  unclear: 'The document cites {id} in {activities}, but the activity type is not recognised. At which Bloom level do participants work there, and does it reach {level}?'
+  missing_with_candidates: 'The document never cites {id}. Do these passages cover "{text}" at level {level} without saying so: {activities}?'
+  missing: 'The document never cites {id} and no passage matches its keywords. Confirm that "{text}" is not addressed, and propose one activity at level {level}.'

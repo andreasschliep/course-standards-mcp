@@ -1,0 +1,58 @@
+# FICTIONAL EXAMPLE DATA, made up for this repository.
+# "Agentic Development Basics" is an invented 90-minute workshop for developers in a Scrum Team.
+# Format: the learning-objective-lint objectives format, plus the optional keys
+# metadata.references and objectives[].keywords that course-standards-mcp reads.
+
+metadata:
+  id: ADB
+  title: Agentic Development Basics (fictional)
+  version: '0.1'
+  language: en
+  audience_level: intermediate
+  references:
+    # How documents cite these objectives: "LO 3" or "Lernziel 3" means ADB-3.
+    prefixes: [LO, LOs, Lernziel, Lernziele, Learning objective, Learning objectives]
+    id_template: 'ADB-{n}'
+
+modules:
+  - id: M1
+    title: How a coding agent works
+    objectives:
+      - id: ADB-1
+        level: Understand
+        text: Explain the plan-act-check loop of a coding agent using one example task.
+        keywords:
+          de: [Schleife, Planen, Handeln, Prüfen]
+      - id: ADB-2
+        level: Apply
+        text: Use a task brief template to instruct a coding agent so that it completes a small task without follow-up questions.
+        keywords:
+          de: [Auftrag, Aufgabenbeschreibung, Rückfragen]
+
+  - id: M2
+    title: Working safely with agent output
+    objectives:
+      - id: ADB-3
+        level: Apply
+        text: Apply a five-point checklist to an agent-generated change before merging it.
+        keywords:
+          de: [Checkliste, Änderung, mergen]
+      - id: ADB-4
+        level: Analyse
+        text: Distinguish tasks suited for an agent from tasks that need a human decision, giving one reason each.
+        keywords:
+          de: [Aufgabenkarten, Entscheidung, unterscheiden]
+      - id: ADB-5
+        level: Evaluate
+        text: Judge whether an agent's test run is sufficient evidence that a change works.
+        keywords:
+          de: [Testlauf, Testläufe, Nachweis, Tests]
+
+  - id: M3
+    title: Agents in the team
+    objectives:
+      - id: ADB-6
+        level: Create
+        text: Design a working agreement that states when an agent may open a pull request.
+        keywords:
+          de: [Arbeitsvereinbarung, Pull Request]
