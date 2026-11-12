@@ -177,11 +177,12 @@ verdicts:
   weak: The content is right, but the activity stays below the target level, there is too little time, or only part of the behaviour is practised.
   missed: No activity addresses the objective, or the evidence is unrelated.
 
-# Questions for needs_judgment, by evidence status. Placeholders: {id} {level} {text}
-# {activities} (titles of the evidence activities), {behaviour} (the objective text).
+# Questions for needs_judgment, by evidence status. Placeholders: {id} {level}
+# {activities} (titles and locations of the evidence activities). The objective's text
+# sits next to the question in the result, so it is not repeated here.
 questions:
-  covered: 'Do participants in {activities} actually reach {level} for {id} ("{text}"), as described?'
-  partial: 'The evidence for {id} ({level}) stays below the target level: {activities}. Do participants perform "{text}" themselves anywhere in the document?'
+  covered: 'Do participants in {activities} actually reach {level} for {id}, as described?'
+  partial: 'The evidence for {id} ({level}) stays below the target level: {activities}. Do participants perform the objective themselves anywhere in the document?'
   unclear: 'The document cites {id} in {activities}, but the activity type is not recognised. At which Bloom level do participants work there, and does it reach {level}?'
-  missing_with_candidates: 'The document never cites {id}. Do these passages cover "{text}" at level {level} without saying so: {activities}?'
-  missing: 'The document never cites {id} and no passage matches its keywords. Confirm that "{text}" is not addressed, and propose one activity at level {level}.'
+  missing_with_candidates: 'The document never cites {id}. Do these passages cover it at level {level} without saying so: {activities}?'
+  missing: 'The document never cites {id} and no passage matches its keywords. Confirm that it is not addressed, and propose one activity at level {level}.'

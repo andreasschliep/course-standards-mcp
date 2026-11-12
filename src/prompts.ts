@@ -45,7 +45,7 @@ export function validationPrompt(args: {
     `1. Call list_learning_objectives with course_id "${args.course_id}".`,
     '2. Read the resource rubric://bloom.',
     `3. Call check_alignment with course_id "${args.course_id}", document ${documentArg}, document_type "${args.document_type}", language "${args.language}"${format}.`,
-    '4. For every objective with needs_judgment.priority "high", and for a sample of the "low" ones, decide met, weak or missed with the rubric criteria:',
+    '4. For every objective with needs_judgment.priority "high", and for a sample of the "low" ones, decide met, weak or missed with the criteria for its level (criteria_by_level in the result, details in rubric://bloom):',
     '   - answer the needs_judgment question from what the document says participants do, not from activity labels;',
     '   - cite the location (lines or row) of the evidence;',
     '   - never call an objective met without a location; keyword candidates alone are never enough for met;',

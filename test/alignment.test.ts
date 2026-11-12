@@ -51,7 +51,7 @@ test('German plan against English objectives: the two demo gaps', async () => {
   );
   assert.deepEqual(o['ADB-3']?.evidence[0]?.types, ['lecture']);
   assert.equal(o['ADB-3']?.needs_judgment.priority, 'high');
-  assert.deepEqual(o['ADB-3']?.needs_judgment.criteria.length, 3);
+  assert.equal(r.criteria_by_level.Apply?.length, 3);
   // LO 5 is never cited, but one passage matches its German keywords.
   assert.equal(o['ADB-5']?.evidence[0]?.via, 'keyword_match');
   assert.equal(o['ADB-5']?.evidence[0]?.confidence, 'low');
@@ -237,4 +237,62 @@ test('list_learning_objectives: courses, objectives, module filter and lint', as
     listLearningObjectives({ course_id: 'ADB', module_id: 'M9' }, d),
   );
   assert.match(textOf(bad), /^unknown_module/);
+});
+
+// ------------------------------------------------------------- phase 3 additions
+
+test('a fully covered mapping document', async () => {
+  const csv = [
+    'LO;Aktivität;Minuten',
+    'LO 1;Kurzinput und Partnergespräch zur Agenten-Schleife;15',
+    'LO 2;Übung: Auftrag mit der Vorlage schreiben;15',
+    'LO 3;Übung: Checkliste auf eine echte Änderung anwenden;10',
+    'LO 4;Fallstudie: Aufgabenkarten zuordnen und vergleichen;15',
+    'LO 5;Peer-Review von drei Testläufen;10',
+    'LO 6;Gruppen entwerfen eine Arbeitsvereinbarung;12',
+  ].join('\n');
+  const r = await ok({ document: { text: csv }, document_type: 'mapping_document', format: 'csv' });
+  assert.deepEqual(
+    { covered: r.summary.covered, partial: r.summary.partial, missing: r.summary.missing },
+    { covered: 6, partial: 0, missing: 0 },
+  );
+  assert.deepEqual(r.hygiene.unknown_references, []);
+});
+
+test('output budget: 30 objectives stay under 8,000 tokens (characters / 4)', async () => {
+  const { checkAlignment, summarise } = await import('../src/alignment.ts');
+  const { rubric } = await import('./helpers.ts');
+  const objectives = Array.from({ length: 30 }, (_, i) => ({
+    id: `B-${i + 1}`,
+    level: (['Understand', 'Apply', 'Analyse'] as const)[i % 3],
+    text: `Explain how a team uses practice number ${i + 1} to improve a fictional product increment.`,
+  }));
+  const doc = parseObjectives({ metadata: { id: 'B' }, modules: [{ id: 'M', objectives }] });
+  const plan = objectives
+    .map(
+      (o, i) =>
+        `### ${i + 1} Block ${i + 1} (10 Min.)\nLO ${i + 1}: Input und Übung zu Thema ${i + 1}. ${'Text '.repeat(40)}`,
+    )
+    .join('\n\n');
+  const result = checkAlignment({
+    catalog: {
+      id: 'B',
+      title: 'Budget (fictional)',
+      version: '1',
+      audienceLevel: null,
+      file: 'b.yaml',
+      references: { prefixes: ['LO'], idTemplate: 'B-{n}' },
+      objectives: doc.objectives.map((o) => ({ ...o, keywords: { de: [], en: [] } })),
+      doc,
+    },
+    rubric: rubric(),
+    text: plan,
+    source: 'text',
+    documentType: 'facilitation_plan',
+    format: 'markdown',
+    language: 'de',
+    maxEvidence: 3,
+  });
+  const chars = summarise(result).length + JSON.stringify(result).length;
+  assert.ok(chars / 4 < 8000, `about ${Math.round(chars / 4)} tokens`);
 });

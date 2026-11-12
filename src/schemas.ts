@@ -158,7 +158,6 @@ export const alignmentOutput = z.object({
       needs_judgment: z.object({
         priority: z.enum(['high', 'low']),
         question: z.string(),
-        criteria: z.array(z.string()),
         rubric: z.literal('rubric://bloom'),
       }),
     }),
@@ -174,6 +173,8 @@ export const alignmentOutput = z.object({
     practised: z.record(z.string(), z.number()),
     audience_check: z.string().nullable(),
   }),
+  /** Rubric criteria once per target level that occurs, instead of once per objective. */
+  criteria_by_level: z.record(z.string(), z.array(z.string())),
   limits: z.array(z.string()),
 });
 

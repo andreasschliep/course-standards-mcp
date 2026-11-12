@@ -139,6 +139,7 @@ The document arrives as `text`, or as a `path` inside a configured root (decisio
 
 - **Objective references.** A prefix (`LO 3`, `Lernziel 3`) followed by a list or a range: `LO 1.4, 2.1`, `LO 3.1–3.5`, `LO 1-6`.
   - A range is expanded only if every ID it produces exists in the catalog.
+  - A note in brackets or parentheses after an item does not end the list (`LO 1.5–1.7 [see note], 2.4–2.8`); numbers inside the note are ignored.
   - References that cannot be resolved are reported as `unknown_references`.
 - **Phase.** `C1` to `C4`, or the names _Connections_, _Concepts_, _Concrete Practice_, _Conclusions_.
 - **Activity types.** Keywords from the lexicon in `rubric://bloom` (DE and EN), searched in the heading and the block text. The highest level among the recognised types is the block's **level ceiling**.
@@ -272,12 +273,7 @@ The output is the result object below, abbreviated. Every key in it is declared 
       ],
       "needs_judgment": {
         "priority": "high",
-        "question": "Do participants review an agent-generated change themselves anywhere in the plan, or do they only hear about it?",
-        "criteria": [
-          "Participants perform the behaviour named by the verb themselves",
-          "in a context close to the objective",
-          "and get feedback on it",
-        ],
+        "question": "The evidence for ADB-3 (Apply) stays below the target level: \"2.3 Agenten-Output prüfen\" (lines 37-41). Do participants perform the objective themselves anywhere in the document?",
         "rubric": "rubric://bloom",
       },
     },
@@ -288,6 +284,13 @@ The output is the result object below, abbreviated. Every key in it is declared 
     "unclassified_activities": ["2.5 Reflexion"],
   },
   "distribution": {/* from computeCoverage: target vs practised levels, audience profile */},
+  "criteria_by_level": {
+    "Apply": [
+      "Participants perform the behaviour named by the verb themselves",
+      "in a context close to the objective",
+      "and get feedback on it.",
+    ],
+  },
   "limits": [
     "activity types are inferred from keywords",
     "minutes of shared blocks count for every objective",
@@ -317,7 +320,7 @@ The output is the result object below, abbreviated. Every key in it is declared 
 - **high:** `partial`, `unclear`, `missing` with candidates, or evidence only from keywords.
 - **low:** `covered` through an explicit reference from a block whose type matches.
 
-The question is generated from the status and the target level. The two or three criteria are copied from the rubric, so the model does not have to read the whole rubric for every objective.
+The question is generated from the status and the target level; it names the objective by id, because its text sits next to it. The two or three rubric criteria for each target level that occurs are listed once in `criteria_by_level`, so the model does not have to read the whole rubric, and the result does not repeat them for every objective (phase 3: 30 objectives went from about 8,300 to well under 8,000 tokens).
 
 **Domain errors:**
 

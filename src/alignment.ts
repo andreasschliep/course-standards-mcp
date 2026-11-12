@@ -401,7 +401,7 @@ export function checkAlignment(req: AlignmentRequest): AlignmentOutput {
       });
     }
 
-    // The question the model has to answer, and the rubric criteria for the target level.
+    // The question the model has to answer; the criteria for its level are in criteria_by_level.
     const questions = rubric.data.questions;
     const named = (list: Activity[]) =>
       list.map((a) => `"${a.title}" (${a.location})`).join(', ') || 'none';
@@ -446,7 +446,6 @@ export function checkAlignment(req: AlignmentRequest): AlignmentOutput {
           text: lo.text,
           activities: named(shown.slice(0, maxEvidence)),
         }),
-        criteria: lo.level ? rubric.criteriaFor(lo.level) : [],
         rubric: 'rubric://bloom',
       },
     };
@@ -504,6 +503,11 @@ export function checkAlignment(req: AlignmentRequest): AlignmentOutput {
       practised: coverage.distribution.practised,
       audience_check: audienceCheck,
     },
+    criteria_by_level: Object.fromEntries(
+      [...new Set(objectives.map((o) => o.level).filter((l): l is BloomLevel => l !== null))].map(
+        (level) => [level, rubric.criteriaFor(level)],
+      ),
+    ),
     limits: LIMITS_BY_TYPE[documentType],
   };
 }
