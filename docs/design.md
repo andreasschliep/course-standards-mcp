@@ -48,7 +48,7 @@ Explainability comes before features. Every part of this design should be explai
                        ├─ tools:     list_learning_objectives, check_alignment,
                        │             check_terms, lookup_term
                        ├─ resources: course://{course_id}/learning-objectives,
-                       │             rubric://bloom, termbase://{source}-{target}
+                       │             rubric://bloom, termbase://en-de
                        ├─ prompt:    validate_course_material
                        ├─ extract/:  Markdown and CSV → activities (new)
                        └─ data:      catalogs, rubric, term base (YAML, configurable folders)
@@ -166,7 +166,7 @@ Four signals, from strong to weak:
 
 1. **IDs are language-neutral.** `LO 3` in a German plan resolves to `ADB-3`.
 2. **The activity-type lexicon is bilingual.** _Übung_ and _exercise_ both lead to Apply.
-3. **Keywords.** The content words of the English objective are mapped to German forms through the term base (`Sprint Goal` → `Sprint-Ziel`; `Product Backlog` stays English) and extended by the optional `keywords.de` in the catalog. Blocks with keyword hits become _candidates_.
+3. **Keywords.** Term-base terms in the English objective are mapped to their German forms (`Sprint Goal` → `Sprint-Ziel`; `Product Backlog` stays English), together with the optional `keywords.de` of the catalog. Keywords form groups, one per concept: the variants of one term count as one hit, and a term inside a longer matched term ("Sprint" in "Sprint Goal") is dropped. Blocks with hits in at least two groups (or in the only group) become _candidates_.
 4. **Bloom verbs DE/EN** in the rubric help the model judge what participants actually do.
 
 Signals 3 and 4 never produce `covered`. They only produce candidates for judgment.
@@ -413,11 +413,11 @@ A **protocol error** means the request itself is broken: an unknown tool, a requ
 
 ## 8. Resources
 
-| URI                                        | Type               | Content                                                                                                                                                                                                                      |
-| ------------------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `course://{course_id}/learning-objectives` | `application/json` | the normalized catalog (same shape as the tool output). Resource template with a `list` callback (all courses) and completion for `course_id`                                                                                |
-| `rubric://bloom`                           | `text/markdown`    | per Bloom level: what participants observably do, verbs EN/DE, activity types with level ceilings, evidence that justifies _met_, typical signs of _weak_; definitions of _met_, _weak_ and _missed_; the judgment questions |
-| `termbase://{source}-{target}`             | `application/json` | the term base. Only `en-de` in version 1; `de-CH` is a locale rule of `check_terms`, not a separate term base                                                                                                                |
+| URI                                        | Type               | Content                                                                                                                                                                                                                                        |
+| ------------------------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `course://{course_id}/learning-objectives` | `application/json` | the normalized catalog (same shape as the tool output). Resource template with a `list` callback (all courses) and completion for `course_id`                                                                                                  |
+| `rubric://bloom`                           | `text/markdown`    | per Bloom level: what participants observably do, verbs EN/DE, activity types with level ceilings, evidence that justifies _met_, typical signs of _weak_; definitions of _met_, _weak_ and _missed_; the judgment questions                   |
+| `termbase://en-de`                         | `application/json` | the term base (data licence CC BY-SA 4.0). Only one language pair in version 1, so a fixed URI; with a second pair it becomes the template `termbase://{source}-{target}`. `de-CH` is a locale rule of `check_terms`, not a separate term base |
 
 The rubric is generated from `data/rubric/bloom.yaml`, the same file the extractor uses for its activity types. What the model reads and what the server computes therefore cannot drift apart.
 
@@ -467,20 +467,25 @@ examples/                               fictional documents
   adb-course-description-de.md
 ```
 
-A term base entry:
+A term base entry (verified on 12 November 2026 against the three German versions of the 2020 guide on scrumguides.org and the translators' glossary 3.5):
 
 ```yaml
 - id: developers
   en: Developers
-  de: Developers # value to be verified against the official German Scrum Guide 2020 in phase 2b
-  category: keep_english
-  deprecated_forms: [Development Team, Entwicklungsteam]
-  wrong_translations: []
-  source: Scrum Guide 2020 (scrumguides.org, CC BY-SA 4.0)
-  note: '2020 replaced the Development Team with Developers inside one Scrum Team.'
+  de: Developer:innen # standard version (inclusive forms with a colon)
+  de_variants: [Developer:in, Developerin, Developerinnen, Developer, Developern] # female and male versions
+  keep_english: true # core terms stay English in German texts
+  deprecated: [Development Team, Development-Team, Entwicklungsteam] # checked in every text
+  wrong_de: [Entwicklerteam, { form: Developers, severity: info }] # checked in German texts
+  source: sg2020-de
+  note: The 2020 guide replaced the Development Team with Developers inside one Scrum Team.
 ```
 
-Every file carries `version` and a header comment; fictional files say so in the first line. Term names from the Scrum Guide are cited with their source and licence.
+`wrong_en` holds unofficial English forms (e.g. "Daily Standup"); they are checked in every text, because English jargon also appears in German texts. `allow_in` lists phrases in which a flagged form is correct.
+
+**Licence of the term base.** The term pairs come from the Scrum Guide 2020 and its official German translation with the translators' glossary, published under CC BY-SA 4.0. `data/termbase/en-de.yaml` is therefore CC BY-SA 4.0 and says so in its header and in `termbase://en-de`; the code is MIT.
+
+Every file carries `version` and a header comment; fictional files say so in the first line.
 
 **Configuration (environment variables only):**
 
